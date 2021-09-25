@@ -1,6 +1,17 @@
 version: '2.3'
 
 services:
+  nodejs:
+    build: ./nodejs
+    environment:
+      - DATABASE_URL=postgres://eco:dummy@database/eco
+    networks:
+      - backend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./nodejs/src:/code/src:ro
+
   rust:
     build: ./rust
     environment:
