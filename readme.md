@@ -2,5 +2,6 @@
 
 ## Implementations
 
+- [NodeJs](./nodejs/) server implementation
 - [Rust](./rust/) server implementation
 
