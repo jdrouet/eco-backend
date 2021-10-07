@@ -1,6 +1,13 @@
 version: '2.3'
 
 services:
+  java:
+    build: ./java
+    networks:
+      - backend
+    ports:
+      - 8080:8080
+
   nodejs:
     build: ./nodejs
     environment:
