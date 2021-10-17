@@ -1,6 +1,15 @@
 version: '2.3'
 
 services:
+  golang:
+    build: ./golang
+    environment:
+      - DB_HOST=database
+    networks:
+      - backend
+    ports:
+      - 8080:8080
+
   java:
     build: ./java
     networks:
