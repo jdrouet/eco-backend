@@ -28,6 +28,22 @@ services:
     volumes:
       - ./nodejs/src:/code/src:ro
 
+  php:
+    build: ./php
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - DB_CONNECTION=pgsql
+      - DB_HOST=database
+      - DB_PORT=5432
+      - DB_DATABASE=eco
+      - DB_USERNAME=eco
+      - DB_PASSWORD=dummy
+    networks:
+      - backend
+    ports:
+      - 8000:8000
+
   python:
     build: ./python
     environment:
