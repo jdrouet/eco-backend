@@ -36,13 +36,14 @@ class LogEntry extends Model
         $res = array("payload" => array());
         foreach ($input as $key => $value) {
             if ($key == "createdAt") {
-                $res["created_at"] = $value;
+                $res["created_at"] = date_create("@$value");
             } elseif ($key == "level") {
                 $res["level"] = $value;
             } else {
                 $res["payload"][$key] = $value;
             }
         }
+        $res["payload"] = json_encode($res["payload"]);
         return LogEntry::create($res);
     }
 
