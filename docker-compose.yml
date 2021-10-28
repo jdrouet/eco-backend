@@ -8,14 +8,14 @@ services:
     networks:
       - backend
     ports:
-      - 8080:8080
+      - 3000:8080
 
   java:
     build: ./java
     networks:
       - backend
     ports:
-      - 8080:8080
+      - 3000:8080
 
   nodejs:
     build: ./nodejs
@@ -42,7 +42,7 @@ services:
     networks:
       - backend
     ports:
-      - 8000:8000
+      - 3000:8000
 
   python:
     build: ./python
@@ -53,7 +53,7 @@ services:
     networks:
       - backend
     ports:
-      - 5000:5000
+      - 3000:5000
 
   rust:
     build: ./rust
