@@ -17,6 +17,4 @@ $router->get('/', function () use ($router) {
     return response('', 204);
 });
 
-$router->get('/search', 'LogEntryController@search');
-
-$router->post('/publish', 'LogEntryController@publish');
+$router->post('/publish', 'EventController@publish');

@@ -1,12 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const morgan = require("morgan");
 
 const server = express();
 
-server.use(morgan("combined"));
 server.use(express.json());
-server.use(require("./controller"));
+server.post("/publish", require("./publish"));
 
 server.listen(3000, (err) => {
   if (err) {

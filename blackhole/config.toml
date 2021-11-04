@@ -1,0 +1,4 @@
+worker_threads = 10
+binding_addr = "0.0.0.0:3000"
+prometheus_addr = "0.0.0.0:4000"
+

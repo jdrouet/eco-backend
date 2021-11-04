@@ -1,40 +1,73 @@
-mod model;
-mod publish;
-mod search;
+use actix_web::{head, post, web, App, HttpResponse, HttpServer};
+use chrono::serde::ts_seconds::deserialize as from_ts;
+use chrono::{DateTime, Utc};
+use std::collections::HashMap;
 
-use actix_web::{head, App, HttpResponse, HttpServer};
-use sqlx::postgres::PgPoolOptions;
-
-fn server_address() -> String {
-    std::env::var("ADDRESS").unwrap_or_else(|_| String::from("0.0.0.0:3000"))
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
+pub struct Event {
+    #[serde(deserialize_with = "from_ts")]
+    ts: DateTime<Utc>,
+    tags: HashMap<String, String>,
+    values: HashMap<String, serde_json::Value>,
 }
 
-fn database_address() -> String {
-    std::env::var("DATABASE_URL")
-        .unwrap_or_else(|_| String::from("postgres://eco:dummy@localhost/eco"))
+#[post("/publish")]
+pub async fn handle_publish(
+    blackhole: web::Data<Blackhole>,
+    payload: web::Json<Event>,
+) -> HttpResponse {
+    let mut payload = payload.into_inner();
+    payload.tags.insert("through".into(), "rust".into());
+    match blackhole.publish(payload).await {
+        Ok(_) => HttpResponse::NoContent().finish(),
+        Err(err) => HttpResponse::InternalServerError().json(&err),
+    }
 }
 
 #[head("/")]
-async fn status() -> HttpResponse {
+async fn handle_status() -> HttpResponse {
     HttpResponse::NoContent().finish()
+}
+
+fn server_address() -> String {
+    std::env::var("ADDRESS").unwrap_or_else(|_| String::from("localhost:3000"))
+}
+
+#[derive(Clone)]
+pub struct Blackhole {
+    client: reqwest::Client,
+    url: String,
+}
+
+impl Blackhole {
+    pub fn from_env() -> Self {
+        Self {
+            client: reqwest::Client::new(),
+            url: std::env::var("BLACKHOLE_URL")
+                .unwrap_or_else(|_| String::from("http://localhost:3010")),
+        }
+    }
+
+    pub async fn publish(&self, event: Event) -> Result<(), String> {
+        self.client
+            .post(&self.url)
+            .json(&event)
+            .send()
+            .await
+            .map_err(|err| err.to_string())?;
+        Ok(())
+    }
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    env_logger::init();
-
-    let pool = PgPoolOptions::new()
-        .max_connections(5)
-        .connect(&database_address())
-        .await
-        .expect("couldn't connect database");
+    let blackhole = Blackhole::from_env();
 
     HttpServer::new(move || {
         App::new()
-            .data(pool.clone())
-            .service(status)
-            .service(publish::handle)
-            .service(search::handle)
+            .app_data(web::Data::new(blackhole.clone()))
+            .service(handle_status)
+            .service(handle_publish)
     })
     .bind(server_address())?
     .run()

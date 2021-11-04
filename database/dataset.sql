@@ -1,8 +1,0 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
-CREATE TABLE mylogs (
-	id UUID NOT NULL PRIMARY KEY DEFAULT uuid_generate_v1(),
-	created_at TIMESTAMP WITH TIME ZONE NOT NULL,
-	level TEXT NOT NULL,
-	payload JSON NOT NULL
-);

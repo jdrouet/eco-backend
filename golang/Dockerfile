@@ -8,8 +8,7 @@ RUN go build
 
 FROM alpine
 
-ENV HOST=0.0.0.0
-ENV PORT=8080
+ENV ADDRESS=0.0.0.0:8080
 
 COPY --from=builder /code/eco-backend /eco-backend
 

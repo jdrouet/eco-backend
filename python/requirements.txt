@@ -1,4 +1,4 @@
 Flask
-flask-sqlalchemy
 gevent
-psycopg2-binary
+jsonschema
+requests

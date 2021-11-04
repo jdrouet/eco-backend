@@ -2,81 +2,116 @@ version: '2.3'
 
 services:
   golang:
+    image: jdrouet/eco-backend:golang
     build: ./golang
+    cpus: 1
+    mem_limit: 128m
+    mem_reservation: 64m
     environment:
-      - DB_HOST=database
+      - BLACKHOLE_URL=http://blackhole:3000
     networks:
       - backend
     ports:
       - 3000:8080
 
   java:
+    image: jdrouet/eco-backend:java
     build: ./java
+    cpus: 1
+    mem_limit: 128m
+    mem_reservation: 64m
+    environment:
+      - BLACKHOLE_URL=http://blackhole:3000
     networks:
       - backend
     ports:
-      - 3000:8080
+      - 3001:8080
 
   nodejs:
+    image: jdrouet/eco-backend:nodejs
     build: ./nodejs
+    cpus: 1
+    mem_limit: 128m
+    mem_reservation: 64m
     environment:
-      - DATABASE_URL=postgres://eco:dummy@database/eco
+      - BLACKHOLE_URL=http://blackhole:3000
     networks:
       - backend
     ports:
-      - 3000:3000
-    volumes:
-      - ./nodejs/src:/code/src:ro
+      - 3002:3000
 
   php:
+    image: jdrouet/eco-backend:php
     build: ./php
+    cpus: 1
+    mem_limit: 128m
+    mem_reservation: 64m
     environment:
+      - BLACKHOLE_URL=http://blackhole:3000
       - APP_ENV=production
       - APP_DEBUG=false
-      - DB_CONNECTION=pgsql
-      - DB_HOST=database
-      - DB_PORT=5432
-      - DB_DATABASE=eco
-      - DB_USERNAME=eco
-      - DB_PASSWORD=dummy
     networks:
       - backend
     ports:
-      - 3000:8000
+      - 3003:80
 
   python:
+    image: jdrouet/eco-backend:python
     build: ./python
+    cpus: 1
+    mem_limit: 128m
+    mem_reservation: 64m
     environment:
-      - DB_URL=postgresql://eco:dummy@database/eco
+      - BLACKHOLE_URL=http://blackhole:3000
       - HOST=0.0.0.0
-      - PORT=5000
+      - PORT=3000
     networks:
       - backend
     ports:
-      - 3000:5000
+      - 3004:3000
 
   rust:
+    image: jdrouet/eco-backend:rust
     build: ./rust
+    cpus: 1
+    mem_limit: 128m
+    mem_reservation: 64m
     environment:
       - ADDRESS=0.0.0.0:3000
-      - DATABASE_URL=postgres://eco:dummy@database/eco
-      - RUST_LOG=info
+      - BLACKHOLE_URL=http://blackhole:3000
     networks:
       - backend
     ports:
-      - 3000:3000
+      - 3005:3000
 
-  database:
-    image: postgres:13-alpine
-    environment:
-      - POSTGRES_USER=eco
-      - POSTGRES_PASSWORD=dummy
+  blackhole:
+    image: ghcr.io/blt/lading:latest
+    command: /http_blackhole --config-path /config.toml
+    networks:
+      - backend
+    volumes:
+      - ./blackhole/config.toml:/config.toml:ro
+
+  scaphandre:
+    image: hubblo/scaphandre
+    command: prometheus
     networks:
       - backend
     ports:
-      - 5432:5432
+      - 8080:8080
     volumes:
-      - ./database/dataset.sql:/docker-entrypoint-initdb.d/dataset.sql:ro
+      - /proc:/proc
+      - /sys/class/powercap:/sys/class/powercap
+
+  prometheus:
+    image: prom/prometheus
+    command: --config.file /prometheus.yml --log.level=debug
+    networks:
+      - backend
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus/config.yml:/prometheus.yml:ro
 
 networks:
   backend: {}
