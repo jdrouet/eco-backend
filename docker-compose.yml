@@ -4,48 +4,39 @@ services:
   golang:
     image: jdrouet/eco-backend:golang
     build: ./golang
-    cpus: 1
-    mem_limit: 128m
-    mem_reservation: 64m
     environment:
       - BLACKHOLE_URL=http://blackhole:3000
     networks:
       - backend
     ports:
       - 3000:8080
+    restart: unless-stopped
 
   java:
     image: jdrouet/eco-backend:java
     build: ./java
-    cpus: 1
-    mem_limit: 128m
-    mem_reservation: 64m
     environment:
       - BLACKHOLE_URL=http://blackhole:3000
     networks:
       - backend
     ports:
-      - 3001:8080
+      - 3000:8080
+    restart: unless-stopped
 
   nodejs:
     image: jdrouet/eco-backend:nodejs
     build: ./nodejs
-    cpus: 1
-    mem_limit: 128m
-    mem_reservation: 64m
     environment:
       - BLACKHOLE_URL=http://blackhole:3000
     networks:
       - backend
     ports:
-      - 3002:3000
+      - 3000:3000
+    restart: unless-stopped
 
   php:
     image: jdrouet/eco-backend:php
     build: ./php
-    cpus: 1
-    mem_limit: 128m
-    mem_reservation: 64m
     environment:
       - BLACKHOLE_URL=http://blackhole:3000
       - APP_ENV=production
@@ -53,14 +44,12 @@ services:
     networks:
       - backend
     ports:
-      - 3003:80
+      - 3000:80
+    restart: unless-stopped
 
   python:
     image: jdrouet/eco-backend:python
     build: ./python
-    cpus: 1
-    mem_limit: 128m
-    mem_reservation: 64m
     environment:
       - BLACKHOLE_URL=http://blackhole:3000
       - HOST=0.0.0.0
@@ -68,21 +57,20 @@ services:
     networks:
       - backend
     ports:
-      - 3004:3000
+      - 3000:3000
+    restart: unless-stopped
 
   rust:
     image: jdrouet/eco-backend:rust
     build: ./rust
-    cpus: 1
-    mem_limit: 128m
-    mem_reservation: 64m
     environment:
       - ADDRESS=0.0.0.0:3000
       - BLACKHOLE_URL=http://blackhole:3000
     networks:
       - backend
     ports:
-      - 3005:3000
+      - 3000:3000
+    restart: unless-stopped
 
   blackhole:
     image: ghcr.io/blt/lading:latest
@@ -91,17 +79,6 @@ services:
       - backend
     volumes:
       - ./blackhole/config.toml:/config.toml:ro
-
-  scaphandre:
-    image: hubblo/scaphandre
-    command: prometheus
-    networks:
-      - backend
-    ports:
-      - 8080:8080
-    volumes:
-      - /proc:/proc
-      - /sys/class/powercap:/sys/class/powercap
 
   prometheus:
     image: prom/prometheus
