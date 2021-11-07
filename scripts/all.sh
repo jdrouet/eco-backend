@@ -10,24 +10,35 @@ docker-compose up -d blackhole
 echo "# doing a dry build to load images in cache"
 docker-compose build $1
 
-echo "# executing script for $1"
+echo "# building $1"
 
 ./bin/joule ./scripts/build.sh $1 > results/$1/build.txt
 
-./bin/joule ./scripts/start.sh $1 > results/$1/start.txt
+echo "# start logging activity"
+docker-compose up -d activity
 
-./bin/joule ./scripts/bench-get.sh $1 10000 20 > results/$1/bench.txt
-./bin/joule ./scripts/bench-get.sh $1 10000 50 >> results/$1/bench.txt
-./bin/joule ./scripts/bench-get.sh $1 1000000 20 >> results/$1/bench.txt
-./bin/joule ./scripts/bench-get.sh $1 1000000 50 >> results/$1/bench.txt
+sleep 2
 
-./bin/joule ./scripts/bench-post.sh $1 10000 20 >> results/$1/bench.txt
-./bin/joule ./scripts/bench-post.sh $1 10000 50 >> results/$1/bench.txt
-./bin/joule ./scripts/bench-post.sh $1 1000000 20 >> results/$1/bench.txt
-./bin/joule ./scripts/bench-post.sh $1 1000000 50 >> results/$1/bench.txt
+echo "# starting $1"
+./scripts/start.sh $1 > results/$1/start.txt
+
+sleep 2
+
+echo "# benchmarking $1"
+
+./scripts/bench-get.sh $1 > results/$1/bench-get.txt
+
+sleep 2
+
+./scripts/bench-post.sh $1 >> results/$1/bench-post.txt
+
+sleep 2
 
 docker-compose stop $1
 docker-compose rm -f $1
+
+docker-compose stop activity
+docker-compose rm -f activity
 
 docker-compose stop blackhole
 docker-compose rm -f blackhole
