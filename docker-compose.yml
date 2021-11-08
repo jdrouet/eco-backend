@@ -81,8 +81,8 @@ services:
       - ./blackhole/config.toml:/config.toml:ro
 
   activity:
-    image: jdrouet/docker-activity
-    command: /data
+    image: jdrouet/docker-activity:canary
+    command: file --format csv /data/output.csv
     volumes:
       - ./results:/data
       - /sys/class/powercap:/sys/class/powercap:ro
