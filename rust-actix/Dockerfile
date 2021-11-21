@@ -9,7 +9,7 @@ RUN cargo fetch
 COPY src /code/src
 RUN cargo build --release --offline
 
-FROM alpine
+FROM alpine:3.14
 
 COPY --from=builder /code/target/release/eco-backend /eco-backend
 

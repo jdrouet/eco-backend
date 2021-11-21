@@ -1,4 +1,4 @@
-FROM python
+FROM python:3.9-alpine3.14
 
 WORKDIR /code
 COPY requirements.txt /code/

@@ -18,8 +18,10 @@ FROM openjdk:11-jre-slim
 EXPOSE 8080
 VOLUME /tmp
 ARG DEPENDENCY=/code/target/dependency
+
 COPY --from=builder ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=builder ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=builder ${DEPENDENCY}/BOOT-INF/classes /app
+
 ENTRYPOINT ["java","-cp","app:app/lib/*","jd.eco.backend.BackendApplication"]
 
