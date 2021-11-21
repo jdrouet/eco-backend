@@ -1,5 +1,5 @@
 #!/bin/bash
 
-for name in golang java nodejs php python rust; do
+for name in golang java-springboot nodejs-express php-laravel python-flask rust-actix; do
 	./scripts/run.sh $name
 done

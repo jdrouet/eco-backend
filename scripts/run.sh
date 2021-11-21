@@ -18,7 +18,7 @@ echo "# building $name"
 sleep 2
 
 for method in get post; do
-	for concurrency in 1 2 3 5 8 13 21 34 55; do
+	for concurrency in 1 10 30 50; do
 		echo "# start logging activity"
 		docker-compose up -d activity
 

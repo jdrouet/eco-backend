@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const server = express();
 
 server.use(express.json());
+server.get("/", require("./status"));
 server.post("/publish", require("./publish"));
 
 server.listen(3000, (err) => {

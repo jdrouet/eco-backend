@@ -24,7 +24,7 @@ pub async fn handle_publish(
     }
 }
 
-#[head("/")]
+#[get("/")]
 async fn handle_status() -> HttpResponse {
     HttpResponse::NoContent().finish()
 }

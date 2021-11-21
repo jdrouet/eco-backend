@@ -25,6 +25,10 @@ public class Event {
         return tags;
     }
 
+    public void addTag(String key, String value) {
+        this.tags.put(key, value);
+    }
+
     public void setTags(Map<String, String> tags) {
         this.tags = tags;
     }

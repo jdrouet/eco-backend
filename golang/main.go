@@ -99,7 +99,7 @@ func main() {
 	address := serverAddress()
 	fmt.Printf("Server starting %s\n", address)
 	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/", status)
+	myRouter.HandleFunc("/", status).Methods("GET")
 	myRouter.HandleFunc("/publish", publish).Methods("POST")
 	log.Fatal(http.ListenAndServe(address, myRouter))
 }

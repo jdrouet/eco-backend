@@ -41,6 +41,7 @@ public class BackendApplication {
 
 	@PostMapping(path = "/publish", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void publish(@RequestBody Event event) throws IOException, InterruptedException {
+		event.addTag("through", "java");
 		ObjectMapper mapper = new ObjectMapper();
 		byte[] value = mapper.writeValueAsBytes(event);
 		HttpRequest request = HttpRequest.newBuilder()

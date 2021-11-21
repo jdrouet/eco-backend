@@ -12,9 +12,9 @@ services:
       - 3000:8080
     restart: unless-stopped
 
-  java:
-    image: jdrouet/eco-backend:java
-    build: ./java
+  java-springboot:
+    image: jdrouet/eco-backend:java-springboot
+    build: ./java-springboot
     environment:
       - BLACKHOLE_URL=http://blackhole:3000
     networks:
@@ -23,9 +23,9 @@ services:
       - 3000:8080
     restart: unless-stopped
 
-  nodejs:
-    image: jdrouet/eco-backend:nodejs
-    build: ./nodejs
+  nodejs-express:
+    image: jdrouet/eco-backend:nodejs-express
+    build: ./nodejs-express
     environment:
       - BLACKHOLE_URL=http://blackhole:3000
     networks:
@@ -34,9 +34,9 @@ services:
       - 3000:3000
     restart: unless-stopped
 
-  php:
-    image: jdrouet/eco-backend:php
-    build: ./php
+  php-laravel:
+    image: jdrouet/eco-backend:php-laravel
+    build: ./php-laravel
     environment:
       - BLACKHOLE_URL=http://blackhole:3000
       - APP_ENV=production
@@ -47,9 +47,9 @@ services:
       - 3000:80
     restart: unless-stopped
 
-  python:
-    image: jdrouet/eco-backend:python
-    build: ./python
+  python-flask:
+    image: jdrouet/eco-backend:python-flask
+    build: ./python-flask
     environment:
       - BLACKHOLE_URL=http://blackhole:3000
       - HOST=0.0.0.0
@@ -60,9 +60,9 @@ services:
       - 3000:3000
     restart: unless-stopped
 
-  rust:
-    image: jdrouet/eco-backend:rust
-    build: ./rust
+  rust-actix:
+    image: jdrouet/eco-backend:rust-actix
+    build: ./rust-actix
     environment:
       - ADDRESS=0.0.0.0:3000
       - BLACKHOLE_URL=http://blackhole:3000
