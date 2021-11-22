@@ -1,4 +1,4 @@
-use actix_web::{head, post, web, App, HttpResponse, HttpServer};
+use actix_web::{get, post, web, App, HttpResponse, HttpServer};
 use chrono::serde::ts_seconds::deserialize as from_ts;
 use chrono::{DateTime, Utc};
 use std::collections::HashMap;
