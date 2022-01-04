@@ -4,6 +4,13 @@
 
 PORT=3000
 
+function download_binaries() {
+	echo "# downloading joule binary"
+	curl -L -o bin/joule https://github.com/jdrouet/joule/releases/download/0.1.0/joule-0.1.0
+	echo "# downloading hey binary"
+	curl -L -o bin/hey https://hey-release.s3.us-east-2.amazonaws.com/hey_linux_amd64
+}
+
 function cleanup() {
 	echo "# doing some cleanup..."
 	docker rm -f $(docker ps -aq) &> /dev/null
@@ -29,8 +36,10 @@ function test_server() {
 	docker-compose up -d database
 	sleep 5
 	echo "# build and start the server..."
+	./bin/joule snapshot results/$1-starting-before.json
 	docker-compose up --build -d $1
 	wait_for_server $1
+	./bin/joule snapshot results/$1-starting-after.json
 	echo "# publishing some logs..."
 	for i in {0..10}; do
 		createdAt=$(echo $i + 1633462963 | bc)

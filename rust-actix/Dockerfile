@@ -1,6 +1,6 @@
-FROM rust:alpine AS builder
+FROM rust:bullseye AS builder
 
-RUN apk add --no-cache musl-dev
+# RUN apk add --no-cache musl-dev
 
 WORKDIR /code
 RUN cargo init
@@ -9,7 +9,7 @@ RUN cargo fetch
 COPY src /code/src
 RUN cargo build --release --offline
 
-FROM alpine:3.14
+FROM debian:bullseye
 
 COPY --from=builder /code/target/release/eco-backend /eco-backend
 

@@ -3,7 +3,9 @@ version: '2.3'
 services:
   golang:
     image: jdrouet/eco-backend:golang
-    build: ./golang
+    build:
+      context: ./golang
+      network: host
     environment:
       - BLACKHOLE_URL=http://blackhole:3000
     networks:
@@ -14,7 +16,9 @@ services:
 
   java-springboot:
     image: jdrouet/eco-backend:java-springboot
-    build: ./java-springboot
+    build:
+      context: ./java-springboot
+      network: host
     environment:
       - BLACKHOLE_URL=http://blackhole:3000
     networks:
@@ -25,7 +29,9 @@ services:
 
   nodejs-express:
     image: jdrouet/eco-backend:nodejs-express
-    build: ./nodejs-express
+    build:
+      context: ./nodejs-express
+      network: host
     environment:
       - BLACKHOLE_URL=http://blackhole:3000
     networks:
@@ -36,7 +42,9 @@ services:
 
   php-laravel:
     image: jdrouet/eco-backend:php-laravel
-    build: ./php-laravel
+    build:
+      context: ./php-laravel
+      network: host
     environment:
       - BLACKHOLE_URL=http://blackhole:3000
       - APP_ENV=production
@@ -49,7 +57,9 @@ services:
 
   python-flask:
     image: jdrouet/eco-backend:python-flask
-    build: ./python-flask
+    build:
+      context: ./python-flask
+      network: host
     environment:
       - BLACKHOLE_URL=http://blackhole:3000
       - HOST=0.0.0.0
@@ -62,7 +72,9 @@ services:
 
   rust-actix:
     image: jdrouet/eco-backend:rust-actix
-    build: ./rust-actix
+    build:
+      context: ./rust-actix
+      network: host
     environment:
       - ADDRESS=0.0.0.0:3000
       - BLACKHOLE_URL=http://blackhole:3000
@@ -81,7 +93,7 @@ services:
       - ./blackhole/config.toml:/config.toml:ro
 
   activity:
-    image: jdrouet/docker-activity:canary
+    image: jdrouet/docker-activity:latest
     command: file --format csv /data/output.csv
     volumes:
       - ./results:/data
