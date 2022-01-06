@@ -13,9 +13,9 @@ echo "# doing a dry build to load images in cache"
 docker-compose build $name
 
 echo "# building $name"
-./bin/joule snapshot results/$name-build-before.json
+./bin/joule file results/$name-build-before.json
 ./scripts/build.sh $name
-./bin/joule snapshot results/$name-build-after.json
+./bin/joule file results/$name-build-after.json
 
 sleep 2
 
@@ -26,15 +26,15 @@ for method in get post; do
 		sleep 2
 
 		echo "# starting $name"
-		./bin/joule snapshot results/$name-start-before.json
+		./bin/joule file results/$name-start-before.json
 		./scripts/start.sh $name
-		./bin/joule snapshot results/$name-start-after.json
+		./bin/joule file results/$name-start-after.json
 		sleep 2
 
 		echo "# benchmarking $name - $concurrency $method"
-		./bin/joule snapshot results/$name-bench-$method-$concurrency-before.json
+		./bin/joule file results/$name-bench-$method-$concurrency-before.json
 		./scripts/bench-$method.sh $concurrency > results/$name-bench-$method-$concurrency.txt
-		./bin/joule snapshot results/$name-bench-$method-$concurrency-after.json
+		./bin/joule file results/$name-bench-$method-$concurrency-after.json
 		sleep 2
 
 		docker-compose stop $name

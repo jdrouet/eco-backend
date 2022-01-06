@@ -2,8 +2,10 @@
 
 set -xe
 
+make -p bin
+
 echo "# downloading joule binary"
-curl -L -o bin/joule https://github.com/jdrouet/joule/releases/download/0.1.0/joule-0.1.0
+curl -L -o bin/joule https://github.com/jdrouet/joule/releases/download/0.2.0/joule-0.2.0
 chmod +x bin/joule
 
 echo "# downloading hey binary"
